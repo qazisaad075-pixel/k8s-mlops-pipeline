@@ -1,0 +1,14 @@
+pipeline {
+    agent any
+    stages {
+        stage('Build Docker Image') {
+            steps { sh 'docker build -t iris-ml-api:v1 ./app' }
+        }
+        stage('Load into Minikube') {
+            steps { sh 'minikube image load iris-ml-api:v1' }
+        }
+        stage('Deploy to Kubernetes') {
+            steps { sh 'kubectl apply -f k8s/deployment.yaml -n mlops-prod' }
+        }
+    }
+}
